@@ -1,0 +1,11 @@
+package deadline
+
+include "model.salam"
+
+/// Preserve the stated deadline while rejecting absent or explicitly unknown dates.
+pub func Check(offer: model.Offer): model.Check:
+    if offer.deadline.len() == 0 or offer.deadline.lower() == "unknown":
+        ret model.Check { label = "deadline", detail = "deadline is not stated" }
+    end
+    ret model.Check { ok = true, label = "deadline", detail = offer.deadline, points = 15 }
+end

@@ -1,0 +1,20 @@
+package offertext
+
+/// Normalize user-supplied tokens before applying exact rules.
+pub func Clean(value: str): str:
+    ret value.trim()
+end
+
+pub func Lower(value: str): str:
+    ret Clean(value).lower()
+end
+
+pub func IsYes(value: str): bool:
+    normalized := Lower(value)
+    ret normalized == "yes" or normalized == "true" or normalized == "required"
+end
+
+pub func IsNo(value: str): bool:
+    normalized := Lower(value)
+    ret normalized == "no" or normalized == "false" or normalized == "none"
+end

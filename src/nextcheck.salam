@@ -1,0 +1,23 @@
+package nextcheck
+
+include "model.salam"
+
+/// Recommend one read-only verification step, in risk order.
+pub func Choose(audit: model.Audit): str:
+    if not audit.spend.ok:
+        ret "confirm that no payment, stake, gas, or deposit is required"
+    end
+    if not audit.funding.ok:
+        ret "find primary-source proof that the reward is funded"
+    end
+    if not audit.submission.ok:
+        ret "locate the sponsor's durable submission route"
+    end
+    if not audit.reward.ok:
+        ret "confirm the amount and currency in the primary listing"
+    end
+    if not audit.deadline.ok:
+        ret "confirm the deadline with the sponsor"
+    end
+    ret "re-read the acceptance criteria before starting work"
+end

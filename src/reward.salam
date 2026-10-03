@@ -1,0 +1,14 @@
+package reward
+
+include "model.salam"
+
+/// A reward is stated only when both amount and currency are present.
+pub func Check(offer: model.Offer): model.Check:
+    if offer.reward.len() == 0 or offer.reward == "0":
+        ret model.Check { label = "reward", detail = "reward amount is missing or zero" }
+    end
+    if offer.currency.len() == 0:
+        ret model.Check { label = "reward", detail = "reward currency is missing" }
+    end
+    ret model.Check { ok = true, label = "reward", detail = offer.reward + " " + offer.currency, points = 25 }
+end

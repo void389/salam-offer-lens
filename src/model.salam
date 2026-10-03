@@ -1,0 +1,39 @@
+package model
+
+/// A factual snapshot copied from one public offer record.
+pub struct Offer:
+    pub title: str = ""
+    pub reward: str = ""
+    pub currency: str = ""
+    pub deadline: str = ""
+    pub requires_spend: str = ""
+    pub funded: str = ""
+    pub submission_url: str = ""
+end
+
+/// The parser returns a value plus a plain-language error.
+pub struct ParseResult:
+    pub ok: bool = false
+    pub offer: Offer = Offer {}
+    pub error: str = ""
+end
+
+/// One independently testable audit rule.
+pub struct Check:
+    pub ok: bool = false
+    pub label: str = ""
+    pub detail: str = ""
+    pub points: int = 0
+end
+
+/// Final decision assembled from the independent checks.
+pub struct Audit:
+    pub reward: Check = Check {}
+    pub deadline: Check = Check {}
+    pub funding: Check = Check {}
+    pub spend: Check = Check {}
+    pub submission: Check = Check {}
+    pub score: int = 0
+    pub verdict: str = ""
+    pub next_check: str = ""
+end

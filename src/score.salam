@@ -1,0 +1,21 @@
+package score
+
+import str
+
+include "model.salam"
+
+/// Sum only evidence-backed points from the independent rules.
+pub func Total(reward: model.Check, deadline: model.Check, funding: model.Check, spend: model.Check, submission: model.Check): int:
+    ret reward.points + deadline.points + funding.points + spend.points + submission.points
+end
+
+/// Spend requirements block an offer; otherwise the evidence score drives triage.
+pub func Verdict(spend: model.Check, total: int): str:
+    if not spend.ok and str.StartsWith(spend.detail, "upfront spend"):
+        ret "BLOCKED"
+    end
+    if total >= 80:
+        ret "READY"
+    end
+    ret "REVIEW"
+end

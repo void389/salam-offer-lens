@@ -1,0 +1,16 @@
+package submission
+
+import str
+
+include "model.salam"
+
+/// A practical offer needs a durable public submission route.
+pub func Check(offer: model.Offer): model.Check:
+    if offer.submission_url.len() == 0:
+        ret model.Check { label = "submission", detail = "submission URL is missing" }
+    end
+    if not str.StartsWith(offer.submission_url, "https://"):
+        ret model.Check { label = "submission", detail = "submission URL must use https" }
+    end
+    ret model.Check { ok = true, label = "submission", detail = offer.submission_url, points = 15 }
+end

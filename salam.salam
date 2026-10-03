@@ -1,0 +1,21 @@
+import os
+
+include "src/parser.salam"
+include "src/audit.salam"
+include "src/report.salam"
+
+func main:
+    args := os.Args()
+    if args.len() != 2:
+        println "usage: offer-lens <offer-file>"
+        ret
+    end
+    line := os.ReadFile(args.get(1))
+    result := parser.Parse(line)
+    if not result.ok:
+        println "INVALID: " + result.error
+        ret
+    end
+    inspected := audit.Run(result.offer)
+    println report.Render(result.offer, inspected)
+end

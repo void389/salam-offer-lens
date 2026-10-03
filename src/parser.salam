@@ -1,0 +1,27 @@
+package parser
+
+include "model.salam"
+include "offertext.salam"
+
+/// Parse TITLE|REWARD|CURRENCY|DEADLINE|REQUIRES_SPEND|FUNDED|SUBMISSION_URL.
+pub func Parse(line: str): model.ParseResult:
+    mut parts := line.trim().split("|")
+    defer parts.free()
+    if parts.len() != 7:
+        ret model.ParseResult {
+            error = "expected exactly 7 pipe-delimited fields"
+        }
+    end
+    ret model.ParseResult {
+        ok = true
+        offer = model.Offer {
+            title = offertext.Clean(parts.get(0))
+            reward = offertext.Clean(parts.get(1))
+            currency = offertext.Clean(parts.get(2))
+            deadline = offertext.Clean(parts.get(3))
+            requires_spend = offertext.Clean(parts.get(4))
+            funded = offertext.Clean(parts.get(5))
+            submission_url = offertext.Clean(parts.get(6))
+        }
+    }
+end

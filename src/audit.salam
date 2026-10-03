@@ -1,0 +1,31 @@
+package audit
+
+include "model.salam"
+include "reward.salam"
+include "deadline.salam"
+include "funding.salam"
+include "spend.salam"
+include "submission.salam"
+include "score.salam"
+include "nextcheck.salam"
+
+/// Run every rule, then derive score, verdict, and a single next check.
+pub func Run(offer: model.Offer): model.Audit:
+    reward_check := reward.Check(offer)
+    deadline_check := deadline.Check(offer)
+    funding_check := funding.Check(offer)
+    spend_check := spend.Check(offer)
+    submission_check := submission.Check(offer)
+    total := score.Total(reward_check, deadline_check, funding_check, spend_check, submission_check)
+    mut result := model.Audit {
+        reward = reward_check
+        deadline = deadline_check
+        funding = funding_check
+        spend = spend_check
+        submission = submission_check
+        score = total
+        verdict = score.Verdict(spend_check, total)
+    }
+    result.next_check = nextcheck.Choose(result)
+    ret result
+end

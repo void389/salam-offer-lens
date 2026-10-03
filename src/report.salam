@@ -1,0 +1,26 @@
+package report
+
+include "model.salam"
+
+func Status(check: model.Check): str:
+    if check.ok: ret "PASS" end
+    ret "CHECK"
+end
+
+func Line(check: model.Check): str:
+    ret "[" + Status(check) + "] " + check.label + ": " + check.detail
+end
+
+/// Produce stable, diff-friendly text for people and shell automation.
+pub func Render(offer: model.Offer, audit: model.Audit): str:
+    mut out := "Offer: " + offer.title + "\n"
+    out = out + "Verdict: " + audit.verdict + "\n"
+    out = out + "Evidence score: " + audit.score + "/100\n"
+    out = out + Line(audit.reward) + "\n"
+    out = out + Line(audit.deadline) + "\n"
+    out = out + Line(audit.funding) + "\n"
+    out = out + Line(audit.spend) + "\n"
+    out = out + Line(audit.submission) + "\n"
+    out = out + "Next check: " + audit.next_check
+    ret out
+end

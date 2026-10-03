@@ -1,0 +1,15 @@
+package funding
+
+include "model.salam"
+include "offertext.salam"
+
+/// Funding must be explicit; an unknown value remains a review item.
+pub func Check(offer: model.Offer): model.Check:
+    if offertext.IsYes(offer.funded):
+        ret model.Check { ok = true, label = "funding", detail = "sponsor funding is stated", points = 20 }
+    end
+    if offertext.IsNo(offer.funded):
+        ret model.Check { label = "funding", detail = "offer is marked unfunded" }
+    end
+    ret model.Check { label = "funding", detail = "funding is not verified" }
+end

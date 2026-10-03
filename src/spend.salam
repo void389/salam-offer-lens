@@ -1,0 +1,15 @@
+package spend
+
+include "model.salam"
+include "offertext.salam"
+
+/// Paying, staking, or depositing before work is a hard safety stop.
+pub func Check(offer: model.Offer): model.Check:
+    if offertext.IsYes(offer.requires_spend):
+        ret model.Check { label = "spend", detail = "upfront spend, stake, or deposit is required" }
+    end
+    if offertext.IsNo(offer.requires_spend):
+        ret model.Check { ok = true, label = "spend", detail = "no upfront spend stated", points = 25 }
+    end
+    ret model.Check { label = "spend", detail = "upfront-spend requirement is unclear" }
+end
