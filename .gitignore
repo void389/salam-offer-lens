@@ -1,0 +1,6 @@
+build/
+*.exe
+*.c
+*.o
+test-output/
+
