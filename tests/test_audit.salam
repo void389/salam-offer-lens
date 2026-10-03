@@ -4,6 +4,7 @@ import os
 
 include "../src/parser.salam"
 include "../src/audit.salam"
+include "../src/exitcode.salam"
 
 mut failures := 0
 
@@ -36,6 +37,9 @@ func main:
     invalid_reward_parse := parser.Parse("Mystery job|many|USD|2026-12-01|no|yes|https://example.test/apply")
     invalid_reward := audit.Run(invalid_reward_parse.offer)
     Check(not invalid_reward.reward.ok, "non-numeric rewards are rejected")
+    Check(exitcode.ForVerdict("READY") == 0, "ready verdict exits successfully")
+    Check(exitcode.ForVerdict("REVIEW") == 2, "review verdict has a distinct exit code")
+    Check(exitcode.ForVerdict("BLOCKED") == 3, "blocked verdict has a distinct exit code")
 
     if failures == 0:
         println "All offer audit checks passed"

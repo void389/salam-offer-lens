@@ -3,19 +3,21 @@ import os
 include "src/parser.salam"
 include "src/audit.salam"
 include "src/report.salam"
+include "src/exitcode.salam"
 
 func main:
     args := os.Args()
     if args.len() != 2:
         println "usage: offer-lens <offer-file>"
-        ret
+        os.Exit(64)
     end
     line := os.ReadFile(args.get(1))
     result := parser.Parse(line)
     if not result.ok:
         println "INVALID: " + result.error
-        ret
+        os.Exit(64)
     end
     inspected := audit.Run(result.offer)
     println report.Render(result.offer, inspected)
+    os.Exit(exitcode.ForVerdict(inspected.verdict))
 end

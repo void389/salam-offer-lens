@@ -1,0 +1,9 @@
+package exitcode
+
+/// Stable process codes let scripts distinguish a safe lead from review or block states.
+pub func ForVerdict(verdict: str): int:
+    if verdict == "READY": ret 0 end
+    if verdict == "REVIEW": ret 2 end
+    if verdict == "BLOCKED": ret 3 end
+    ret 64
+end
