@@ -3,4 +3,5 @@ build/
 *.c
 *.o
 test-output/
-
+*.log
+.salam-build/
