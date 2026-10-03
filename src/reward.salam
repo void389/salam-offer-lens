@@ -1,11 +1,17 @@
 package reward
 
+import conv
+
 include "model.salam"
 
 /// A reward is stated only when both amount and currency are present.
 pub func Check(offer: model.Offer): model.Check:
-    if offer.reward.len() == 0 or offer.reward == "0":
-        ret model.Check { label = "reward", detail = "reward amount is missing or zero" }
+    if offer.reward.len() == 0:
+        ret model.Check { label = "reward", detail = "reward amount is missing" }
+    end
+    amount := conv.ParseFloat(offer.reward)
+    if amount <= 0.0:
+        ret model.Check { label = "reward", detail = "reward amount must be a positive number" }
     end
     if offer.currency.len() == 0:
         ret model.Check { label = "reward", detail = "reward currency is missing" }

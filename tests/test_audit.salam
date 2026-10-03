@@ -33,6 +33,10 @@ func main:
     Check(not malformed.ok, "wrong field count is rejected")
     Check(risky.next_check == "confirm that no payment, stake, gas, or deposit is required", "highest-risk next check is selected")
 
+    invalid_reward_parse := parser.Parse("Mystery job|many|USD|2026-12-01|no|yes|https://example.test/apply")
+    invalid_reward := audit.Run(invalid_reward_parse.offer)
+    Check(not invalid_reward.reward.ok, "non-numeric rewards are rejected")
+
     if failures == 0:
         println "All offer audit checks passed"
     end
