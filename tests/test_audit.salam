@@ -1,0 +1,40 @@
+package main
+
+import os
+
+include "../src/parser.salam"
+include "../src/audit.salam"
+
+mut failures := 0
+
+func Check(condition: bool, label: str):
+    if condition:
+        println "PASS: " + label
+    else:
+        println "FAIL: " + label
+        failures += 1
+    end
+end
+
+func main:
+    ready_parse := parser.Parse("Public API schema check|25|USDC|2026-10-31|no|yes|https://example.test/submit")
+    Check(ready_parse.ok, "valid row parses")
+    ready := audit.Run(ready_parse.offer)
+    Check(ready.score == 100, "complete evidence scores 100")
+    Check(ready.verdict == "READY", "complete evidence is ready")
+
+    risky_parse := parser.Parse("Unclear task|0||unknown|yes|no|")
+    Check(risky_parse.ok, "risky row still parses as facts")
+    risky := audit.Run(risky_parse.offer)
+    Check(risky.score == 0, "unsupported claims receive no points")
+    Check(risky.verdict == "BLOCKED", "upfront spend blocks work")
+
+    malformed := parser.Parse("only|three|fields")
+    Check(not malformed.ok, "wrong field count is rejected")
+    Check(risky.next_check == "confirm that no payment, stake, gas, or deposit is required", "highest-risk next check is selected")
+
+    if failures == 0:
+        println "All offer audit checks passed"
+    end
+    os.Exit(failures)
+end
